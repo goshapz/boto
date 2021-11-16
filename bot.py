@@ -4,7 +4,6 @@ from telebot import TeleBot
 import random
 import schedule
 import datetime
-import time
 
 conn = psycopg2.connect(database="service",
                         user="postgres",
@@ -14,9 +13,7 @@ conn = psycopg2.connect(database="service",
 
 cursor = conn.cursor()
 
-
 token = '2135145672:AAGKUt03amS6MOrfcQpORDFRDWHwz4K073E'
-
 
 bot: TeleBot = telebot.TeleBot(token)
 
@@ -31,7 +28,8 @@ def start(message):
     bot.send_message(message.chat.id, "Привет, с удовльствием скажу что у тебя по расписанию!", reply_markup=keyboard)
     print(datetime.datetime.now().time())
 
-
+''' 
+тестовая функция
 def budilnik():
     print("Спокойной ночи")
 
@@ -41,7 +39,7 @@ def budilnik():
     schedule.every().tuesday.at('9:30').do(budilnik)
     schedule.every().wednesday.at("13:10").do(budilnik)
     schedule.every().tuesday.at("21:30").do(budilnik)
-
+'''
 
 @bot.message_handler(content_types=['text'])
 def answer(message):
@@ -74,6 +72,7 @@ def answer(message):
     if message.text.lower() == 'завтра':
         cursor.execute("SELECT num, lesson FROM Timetable WHERE date = (date(now()) + integer '1');")
         records = list(cursor.fetchall())
+        print(records)
         q = records[0][1]
         w = records[1][1]
         e = records[2][1]
@@ -161,11 +160,11 @@ def answer(message):
         a = random.randint(1, 10062)
         cursor.execute("SELECT text FROM anek WHERE id = '{0}'".format(a))
         records = list(cursor.fetchall())
-        bot.send_message(message.chat.id, records)
+        bot.send_message(message.chat.id, str(records))
 
     if message.text.lower() == '/агила':
         bot.send_message(message.chat.id, 'https://vk.com/doc257116315_619803'
-                                         '977?hash=b5f4c0d3'
+                                          '977?hash=b5f4c0d3'
                                           '7ede824274&dl=1ce00b0970a769ae03')
     if message.text.lower() == '/математика':
         bot.send_message(message.chat.id, 'https://vk.com/doc494484715_469501555?ha'
