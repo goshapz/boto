@@ -2,7 +2,7 @@ import telebot
 import psycopg2
 from telebot import TeleBot
 import random
-import schedule
+# import schedule
 import datetime
 
 conn = psycopg2.connect(database="service",
@@ -18,15 +18,34 @@ token = '2135145672:AAGKUt03amS6MOrfcQpORDFRDWHwz4K073E'
 bot: TeleBot = telebot.TeleBot(token)
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', '/назад.....'])
 def start(message):
     print(message.chat.id)
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.row("По дате", "Сегодня")
     keyboard.row("Завтра", "Вчера")
+    keyboard.row('/анекдот', '/help')
 
     bot.send_message(message.chat.id, "Привет, с удовльствием скажу что у тебя по расписанию!", reply_markup=keyboard)
     print(datetime.datetime.now().time())
+
+
+@bot.message_handler(commands=['анекдот'])
+def start(message):
+    keyboard1 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard1.row('ахАХАХахаХАХ11))0)')
+    keyboard1.row('/назад.....')
+    a = random.randint(1, 10062)
+    cursor.execute("SELECT text FROM anek WHERE id = '{0}'".format(a))
+    records = list(cursor.fetchall())
+    b = str(records)
+    a = '\\n'
+    b = b.replace(a, ' ')
+    b = b.replace('\\', '\n ')
+    b = b.replace('[(\'', ' ')
+    b = b.replace('\',)]', ' ')
+    bot.send_message(message.chat.id, b, reply_markup=keyboard1)
+
 
 ''' 
 тестовая функция
@@ -40,6 +59,7 @@ def budilnik():
     schedule.every().wednesday.at("13:10").do(budilnik)
     schedule.every().tuesday.at("21:30").do(budilnik)
 '''
+
 
 @bot.message_handler(content_types=['text'])
 def answer(message):
@@ -156,11 +176,17 @@ def answer(message):
             t = str('Расписание на ' + date1 + ':\n' + q + w + e + r)
             bot.send_message(message.chat.id, t)
 
-    if message.text.lower() == '/анекдот':
+    if message.text.lower() == 'ахахахахахах11))0)':
         a = random.randint(1, 10062)
         cursor.execute("SELECT text FROM anek WHERE id = '{0}'".format(a))
         records = list(cursor.fetchall())
-        bot.send_message(message.chat.id, str(records))
+        b = str(records)
+        a = '\\n'
+        b = b.replace(a, ' ')
+        b = b.replace('\\', '\n ')
+        b = b.replace('[(\'', ' ')
+        b = b.replace('\',)]', ' ')
+        bot.send_message(message.chat.id, b)
 
     if message.text.lower() == '/агила':
         bot.send_message(message.chat.id, 'https://vk.com/doc257116315_619803'
