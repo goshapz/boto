@@ -28,7 +28,16 @@ def start(message):
                                       'чтобы узнать список доступных команд! \nТак же можешь узнать рас'
                                       'писание на интересующий день.', reply_markup=keyboard)
     print(datetime.datetime.now().time())
-
+    userf = message.from_user.first_name
+    users = message.from_user.last_name
+    username = (userf + ' ' + users)
+    print(username + ' ' + 'смотрит главное меню')
+    cursor.execute("SELECT * from telusers WHERE chat_id =%s", (str(message.chat.id),))
+    records = list(cursor.fetchall())
+    if not records:
+        cursor.execute('insert into telusers(chat_id, username) VALUES (%s, %s);',
+                       (str(message.chat.id), str(username)))
+        conn.commit()
 
 @bot.message_handler(commands=['anekdot'])
 def start(message):
